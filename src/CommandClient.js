@@ -39,13 +39,25 @@ class CommandClient extends Client {
   }
 
   async setupEvents() {
-    const eventFiles = readdirSync(this.eventFolder).filter((file) =>
-      file.endsWith(".js")
-    );
+    const eventFiles = readdirSync(this.eventFolder);
 
     for (const file of eventFiles) {
-      const event = require(path.join(process.cwd(), this.eventFolder, file));
-      this.on(event.name, event.run.bind(null, this));
+      if (file.includes(".js")) {
+        const event = require(path.join(process.cwd(), this.eventFolder, file));
+        this.on(event.name, event.run.bind(null, this));
+      } else {
+        const category = readdirSync(`${this.eventFolder}/${file}`);
+
+        for (const events of category) {
+          const event = require(path.join(
+            process.cwd(),
+            this.eventFolder,
+            file,
+            events
+          ));
+          this.on(event.name, event.run.bind(null, this));
+        }
+      }
     }
 
     // Ready event handler
