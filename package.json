@@ -1,0 +1,19 @@
+{
+  "name": "chars-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^1.6.5",
+    "@discordjs/rest": "^2.0.1",
+    "discord-api-types": "^0.37.56",
+    "discord.js": "^14.13.0",
+    "js": "^0.1.0",
+    "path": "^0.12.7"
+  }
+}
