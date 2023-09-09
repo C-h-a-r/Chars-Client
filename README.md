@@ -65,5 +65,11 @@ module.exports = {
 ## Info
 <p>You can find your discord bot token <a href="https://discord.com/developers/applications/">here</a></p>
 
+## Changelog
+<p>
+- Added Event Categories
+</p>
+
+
 ### Help
 [![](https://dcbadge.vercel.app/api/server/bGy3qtEHtV)](https://discord.gg/bGy3qtEHtV)
