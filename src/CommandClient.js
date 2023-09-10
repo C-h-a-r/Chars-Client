@@ -24,17 +24,31 @@ class CommandClient extends Client {
   }
 
   async setupCommands() {
-    const commandFiles = readdirSync(this.commandFolder).filter((file) =>
-      file.endsWith(".js")
-    );
+    const commandFiles = readdirSync(this.commandFolder);
 
     for (const file of commandFiles) {
-      const command = require(path.join(
-        process.cwd(),
-        this.commandFolder,
-        file
-      ));
-      this.commands.set(command.data.name, command);
+      if (file.includes('js')) {
+        const command = require(path.join(
+          process.cwd(),
+          this.commandFolder,
+          file
+        ));
+        this.commands.set(command.data.name, command);
+
+      } else {
+        const category = readdirSync(`${this.commandFolderFolder}/${file}`);
+
+        for (const commands of category) {
+          const command = require(path.join(
+            process.cwd(),
+            this.commandFolder,
+            file,
+            commands
+          ));
+          this.commands.set(command.data.name, command);
+        }
+      }
+     
     }
   }
 
@@ -63,7 +77,6 @@ class CommandClient extends Client {
     // Ready event handler
     this.once("ready", () => {
       this.setupCommands(); // Declare the commands
-      this.registerCommands(); // Register the commands
     });
 
     // Interaction (slash command) event handler
@@ -90,23 +103,24 @@ class CommandClient extends Client {
       (command) => command.data instanceof SlashCommandBuilder
     );
 
-    const rest = new REST({ version: "10" }).setToken(this.token);
+    const rest = new REST({ version: "9" }).setToken(this.token);
 
     try {
       console.log("Started refreshing application (/) commands.");
 
-      await rest.put(Routes.applicationCommands(this.user.id), {
+     const x = await rest.put(Routes.applicationCommands(this.user.id), {
         body: commands.map((command) => command.data.toJSON()),
       });
-
+await console.log(x)
       console.log("Successfully reloaded application (/) commands.");
     } catch (error) {
-      throw new Error("Error refreshing application (/) commands:", error);
+      console.log("Error refreshing application (/) commands:", error);
     }
   }
 
   async start() {
     await this.login(this.token);
+    await this.registerCommands()
   }
 }
 
